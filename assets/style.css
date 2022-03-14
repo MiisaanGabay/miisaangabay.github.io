@@ -1,0 +1,59 @@
+[contenteditable]:empty::before {
+  color: gray;
+}
+
+.eng[contenteditable]:empty::before {
+  content: "Original Text..."
+}
+
+.so[contenteditable]:empty::before {
+  content: "Translated Text...";
+}
+input[type=text], select, .input, span {
+  width: 100%;
+  background-color: white;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+input[type=submit] {
+  width: 100%;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+.dark, .dark span {
+  background-color: black;
+}
+
+.dark div {
+  background-color: #121212;
+}
+
+.dark h3, .dark p, .dark label, .dark span {
+  color: white;
+}
+
+h3, #toggle {
+  text-align: center;
+}

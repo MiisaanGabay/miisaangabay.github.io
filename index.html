@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <link rel="stylesheet" href="/assets/style.css" type="text/css">
+</head>
+<body>
+
+<h3>Syllable Counter</h3>
+<div>
+  <form>
+    <label for="eng">English Text</label>
+    <span class="eng" id="eng" role="textbox" contenteditable></span>
+
+    <label for="so">Somali Text</label>
+    <span class="so" id="so" role="textbox" contenteditable></span>
+  </form>
+  <p id="syeng">English Syllables: 0</p>
+  <p id="syso">Somali Syllables: 0</p>
+</div>
+<p id="toggle">Dark Mode: <a href="#toggle" onClick="toggleTheme()">Toggle</a></p>
+
+<script>
+  function toggleTheme() {
+      document.body.classList.toggle("dark");
+      let theme = "light";
+
+      if (document.body.classList.contains("dark")) {
+          theme = "dark";
+      }
+
+      localStorage.setItem("theme", theme);
+  }
+</script>
+<script>
+    document.getElementById("eng").addEventListener("input", countEngSyllable);
+    document.getElementById("so").addEventListener("input", countSoSyllable);
+
+  function countEngSyllable(e) {
+      var text = document.getElementById("eng").innerText;
+      var words = text.split(" ");
+      var count = 0;
+      for (word in words) {
+          var word_text = words[word];
+          var to_add = new_count(word_text);
+
+          if (word_text.slice(word_text.length - 3) === "ded"  || word_text.slice(word_text.length - 3) === "ted") {
+              to_add++;
+          }
+
+          count = count + to_add;
+
+          if (word_text.length === 0) {
+              count = 0;
+          }
+      }
+
+      if (document.getElementById("eng").innerText.trim().length === 0) {
+          document.getElementById("eng").textContent = "";
+          count = 0;
+      }
+
+      document.getElementById("syeng").textContent = `English Syllables: ${count}`;
+  }
+
+  function countSoSyllable(e) {
+      var text = document.getElementById("so").innerText;
+      var words = text.split(" ");
+      var count = 0;
+      for (word in words) {
+          var word_text = words[word];
+          var to_add = so_count(word_text);
+          count = count + to_add;
+
+          if (word_text.length === 0) {
+              count = 0;
+          }
+      }
+
+      if (document.getElementById("so").innerText.trim().length === 0) {
+          document.getElementById("so").textContent = "";
+          count = 0;
+      }
+
+      document.getElementById("syso").textContent = `Somali Syllables: ${count}`;
+  }
+
+  function new_count(word) {
+      word = word.toLowerCase();
+      if(word.length <= 3) { return 1; }
+      word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+      word = word.replace(/^y/, '');
+      return word.match(/[aeiouy]{1,2}/g).length;
+  }
+
+  function so_count(word) {
+      word = word.toLowerCase();
+      if(word.length <= 3) { return 1; }
+      return word.match(/[aeiouy]{1,2}/g).length;
+  }
+
+  function setDark() {
+      const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+      const currentTheme = localStorage.getItem("theme");
+
+      if (currentTheme === 'dark' || prefersDarkScheme.matches) {
+          document.body.classList.add('dark');
+      }
+  }
+
+  (function() {
+      document.addEventListener('DOMContentLoaded', (event) =>
+          setDark()
+      )
+  })();
+</script>
+</body>
+</html>
