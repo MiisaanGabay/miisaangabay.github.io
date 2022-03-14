@@ -1,102 +1,643 @@
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <head>
     <link rel="stylesheet" href="/assets/style.css" type="text/css">
 </head>
 <body>
 
-<h3>Syllable Counter</h3>
+<h3>Miisaan Gabay</h3>
 <div>
   <form>
-    <label for="eng">English Text</label>
-    <span class="eng" id="eng" role="textbox" contenteditable></span>
-
-    <label for="so">Somali Text</label>
-    <span class="so" id="so" role="textbox" contenteditable></span>
+    <label for="eng">Baytkaaga</label>
+    <span class="parent">
+        <span class="eng text full" id="eng" role="textbox" contenteditable></span>
+        <span class="arrow ripple" onclick="save()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="arrow" height="1em" viewBox="0 0 448 512">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path fill="currentColor" d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
+            </svg>
+        </span>
+    </span>
+    <label for="so">Baytkii oo Miisaaman</label>
+    <span class="so" id="so" role="textbox"></span>
   </form>
-  <p id="syeng">English Syllables: 0</p>
-  <p id="syso">Somali Syllables: 0</p>
+  <div style="text-align: center; display: none;" id="xaraf">
+      <u style="color: red;" id="xaraf_u">Xaraf kuma socdo</u>
+  </div>
+  <span style="height: 114px; overflow-y: scroll !important; white-space: pre-wrap; display: none; padding: 0;" id="gabayga">
+  </span>
+  <div style="padding: 0; text-align: center; display: none;" id="edit-row">
+      <br>
+      <svg onclick="del()" id="delete" height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+          <path fill="#ef3542" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
+      </svg>
+      <svg class="edit" id="edit" style="margin-left: 1em;" height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+          <path id="all" fill="currentColor" d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z"/>
+          <path id="up" fill="currentColor" style="display: none;" d="M182.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-128 128c-9.2 9.2-11.9 22.9-6.9 34.9s16.6 19.8 29.6 19.8H288c12.9 0 24.6-7.8 29.6-19.8s2.2-25.7-6.9-34.9l-128-128z"/>
+          <path id="down" fill="currentColor" style="display: none;" d="M182.6 470.6c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128z"/>
+      </svg>
+  </div>
+  <div id="download" style="text-align: center; display: none;">
+      <a href="#" onclick="download_gabay()">Dajiso Gabayga</a>
+  </div>
+  <p id="alan">Tirada Alanka: 0</p>
+  <p id="dheer">Tirada Shaqaldheerka: 0</p>
+  <p id="iskudar">Tirada La Isku Daray: 0</p>
 </div>
-<p id="toggle">Dark Mode: <a href="#toggle" onClick="toggleTheme()">Toggle</a></p>
-
+<!--<p id="toggle">Midabka: <a href="#" onClick="toggleTheme()">Badal</a></p>-->
+<p id="toggle">
+    <input type="checkbox" class="darkmode" id="darkmode" />
+    <label for="darkmode" class="themelabel" onClick="toggleTheme()">
+        <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/>
+        </svg>
+        <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+            <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+            <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+        </svg>
+    </label>
+</p>
+<div id="modal" class="modal" style="display: none;">
+    <span class="close" onClick="xer()">&times;</span>
+    <div class="content">
+        <span class="tuttext">1: Mesha kowaad baad ku qoraysa baytkaad aliftay, meshaa labaadna waxaa soo baxayso cabirkiisa:</span>
+        <label>Baytkaaga:</label>
+        <span>Caku duunyo iyo maal hadaan</span>
+        <label>Baytkii oo Misaaman</label>
+        <span>
+            <insert style="color: green;">Caku duun | </insert>
+            <insert style="color: green;">yo i yo | </insert>
+            <insert style="color: green;">maal | </insert>
+            <insert style="color: green;">ha daan | </insert>
+        </span>
+        <span class="tuttext">2: Markaa baytka dhameystirtid, xaraf haddeysan ku socon, waa lagu sheegin:</span>
+        <label>Baytkaaga:</label>
+        <span>Caku duunyo iyo maal hadaad, guga u ooyeeyso</span>
+        <label>Baytkii oo Miisaaman</label>
+        <span>
+            <insert style="color: green;">Caku duun | </insert>
+            <insert style="color: green;">yo i yo | </insert>
+            <insert style="color: green;">maal | </insert>
+            <insert style="color: green;">ha daad | </insert>
+            <p></p>
+            <insert style="color: green;">gu ga u | </insert>
+            <insert style="color: green;"> oo | </insert>
+            <insert style="color: green;">yeey | </insert>
+            <insert style="color: green;">so | </insert>
+        </span>
+        <div style="text-align: center;" id="xaraf">
+            <u style="color: red;">Xaraf kuma socdo</u>
+        </div>
+        <span class="tuttext">3: Miisanka hadee wax ka haldantahay, waa lugu calaamadeynaayaa:</span>
+        <label>Baytkaaga:</label>
+        <span>Caku duunyo iyo maal haadaan</span>
+        <label>Baytkii oo Miisaaman</label>
+        <span>
+            <insert style="color: green;">Ca ku duun | </insert>
+            <insert style="color: green;">yo i yo | </insert>
+            <insert style="color: green;">maal | </insert>
+            <u style="color: red;">haa daan | </u>
+        </span>
+        <span class="tuttext">Hoos waxaa ku qoran tirada alamaha iyo shaqaldheeraha, kuwasii oo ah iney 20 noqdaan markii la isku daro:</span>
+        <label>Baytkaaga</label>
+        <span>Caku duunyo iyo maal hadaan</span>
+        <label>Baytkii oo Miisaaman</label>
+        <span>
+            <insert style="color: green;">Ca ku duun | </insert>
+            <insert style="color: green;">yo i yo | </insert>
+            <insert style="color: green;">maal | </insert>
+            <insert style="color: green;">ha daan | </insert>
+        </span>
+        <p>Tirada Alanka: 9</p>
+        <p>Tirada Shaqaldheerka: 3</p>
+        <p>Tirada La Isku Daray: 12</p>
+        <span class="tuttext">4: Baytka markuu miisaanka le'egyahay iyo xarafraacna leeyahay, waxaa soo baxayso falaar oo aad u isticmaali kartid inaad baytka meel ku kaydiso sidaad baytka ku xigo u qoran kartid:</span>
+        <label>Baytkaaga:</label>
+        <br>
+        <span style="padding: 0;">
+        <span class="text">Caku duunyo iyo maal hadaan deeqda laga dhiibin</span>
+        <span class="arrow ripple">
+            <svg xmlns="http://www.w3.org/2000/svg" class="arrow" height="1em" viewBox="0 0 448 512">
+            <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. -->
+            <path fill="currentColor" d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/>
+            </svg>
+        </span>
+        </span>
+        <span class="tuttext">5: Bayt awal kuu kaydsanaa waa iska tiri kartaa, hadaan taabatid or markaasna calamadda gaduudka oo hoos ku taalo aad taabatid</span>
+        <span style="height: 114px; overflow-y: scroll !important; white-space: pre-wrap; padding: 0;"><span style="border: none; margin: 0px; border-radius: 9px; background-color: rgb(70, 150, 220); width: 100%;">1: Caku duunyo iyo maal hadaan deeqda laga dhiibin&nbsp;</span>
+        </span>
+        <div style="padding: 0; text-align: center;">
+            <br>
+            <svg height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                <path fill="#ef3542" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
+            </svg>
+        </div>
+        <span class="tuttext">6: Bayt hadaad rabtid inaad boos kale galisid, markaa taabatid baytka waxaa ku dhaqaajin karta falaara soo baxa:</span>
+        <span style="height: 114px; overflow-y: scroll !important; white-space: pre-wrap; padding: 0;"><span style="border: none; margin: 0px; border-radius: 9px; background-color: rgb(70, 150, 220); width: 100%;">1: Caku duunyo iyo maal hadaan deeqda laga dhiibin&nbsp;</span>
+        </span>
+        <div style="padding: 0; text-align: center;">
+            <br>
+            <svg height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                <path fill="#ef3542" d="M170.5 51.6L151.5 80h145l-19-28.4c-1.5-2.2-4-3.6-6.7-3.6H177.1c-2.7 0-5.2 1.3-6.7 3.6zm147-26.6L354.2 80H368h48 8c13.3 0 24 10.7 24 24s-10.7 24-24 24h-8V432c0 44.2-35.8 80-80 80H112c-44.2 0-80-35.8-80-80V128H24c-13.3 0-24-10.7-24-24S10.7 80 24 80h8H80 93.8l36.7-55.1C140.9 9.4 158.4 0 177.1 0h93.7c18.7 0 36.2 9.4 46.6 24.9zM80 128V432c0 17.7 14.3 32 32 32H336c17.7 0 32-14.3 32-32V128H80zm80 64V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16zm80 0V400c0 8.8-7.2 16-16 16s-16-7.2-16-16V192c0-8.8 7.2-16 16-16s16 7.2 16 16z"/>
+            </svg>
+            <svg class="edit" style="margin-left: 1em;" height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+                <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                <path fill="currentColor" d="M137.4 41.4c12.5-12.5 32.8-12.5 45.3 0l128 128c9.2 9.2 11.9 22.9 6.9 34.9s-16.6 19.8-29.6 19.8H32c-12.9 0-24.6-7.8-29.6-19.8s-2.2-25.7 6.9-34.9l128-128zm0 429.3l-128-128c-9.2-9.2-11.9-22.9-6.9-34.9s16.6-19.8 29.6-19.8H288c12.9 0 24.6 7.8 29.6 19.8s2.2 25.7-6.9 34.9l-128 128c-12.5 12.5-32.8 12.5-45.3 0z"/>
+            </svg>
+        </div>
+        <span class="tuttext">7: Gabayga hadaad rabtid, waa soo dejisan kartaa:</span>
+        <div style="text-align: center;">
+            <a href="#">Dajiso Gabayga</a>
+        </div>
+        <span class="tuttext">8: Midab madow ama midab cad baa website-ka ku badali kartaa geedkaan:</span>
+        <div style="text-align: center;">
+            <label for="darkmode" class="themelabel">
+                <svg class="sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                    <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                    <path d="M361.5 1.2c5 2.1 8.6 6.6 9.6 11.9L391 121l107.9 19.8c5.3 1 9.8 4.6 11.9 9.6s1.5 10.7-1.6 15.2L446.9 256l62.3 90.3c3.1 4.5 3.7 10.2 1.6 15.2s-6.6 8.6-11.9 9.6L391 391 371.1 498.9c-1 5.3-4.6 9.8-9.6 11.9s-10.7 1.5-15.2-1.6L256 446.9l-90.3 62.3c-4.5 3.1-10.2 3.7-15.2 1.6s-8.6-6.6-9.6-11.9L121 391 13.1 371.1c-5.3-1-9.8-4.6-11.9-9.6s-1.5-10.7 1.6-15.2L65.1 256 2.8 165.7c-3.1-4.5-3.7-10.2-1.6-15.2s6.6-8.6 11.9-9.6L121 121 140.9 13.1c1-5.3 4.6-9.8 9.6-11.9s10.7-1.5 15.2 1.6L256 65.1 346.3 2.8c4.5-3.1 10.2-3.7 15.2-1.6zM160 256a96 96 0 1 1 192 0 96 96 0 1 1 -192 0zm224 0a128 128 0 1 0 -256 0 128 128 0 1 0 256 0z"/>
+                </svg>
+                <svg class="moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+                    <!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                    <path d="M223.5 32C100 32 0 132.3 0 256S100 480 223.5 480c60.6 0 115.5-24.2 155.8-63.4c5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6c-96.9 0-175.5-78.8-175.5-176c0-65.8 36-123.1 89.3-153.3c6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"/>
+                </svg>
+            </label>
+        </div>
+    </div>
+</div>
 <script>
   function toggleTheme() {
+      var check = document.getElementById("darkmode");
       document.body.classList.toggle("dark");
       let theme = "light";
 
       if (document.body.classList.contains("dark")) {
           theme = "dark";
+          check.checked = false;
       }
 
       localStorage.setItem("theme", theme);
   }
+
+  function xer() {
+      document.getElementById("modal").style.display = "none";
+      localStorage.setItem("done", 1);
+  }
 </script>
 <script>
-    document.getElementById("eng").addEventListener("input", countEngSyllable);
-    document.getElementById("so").addEventListener("input", countSoSyllable);
+    var saved = [];
+    var selected = -1;
+    var editable = document.getElementById("edit-row");
+    function download_gabay() {
+        const a = document.createElement("a");
+        a.style.display = "none";
+        const blob = new Blob([saved.join("\r\n")], {type: "text/plain"});
+        const url = URL.createObjectURL(blob);
+        a.setAttribute("href", url);
+        a.setAttribute("download", "Gabay");
+        a.click();
+    }
 
-  function countEngSyllable(e) {
-      var text = document.getElementById("eng").innerText;
-      var words = text.split(" ");
-      var count = 0;
-      for (word in words) {
-          var word_text = words[word];
-          var to_add = new_count(word_text);
+    var dwnload = document.getElementById("download");
+    function del() {
+        if (selected !== -1 && selected < saved.length) {
+            if (saved.length === 1) {
+                selected = -1;
+                gabayga.textContent = "";
+                gabayga.style.display = "none";
+                dwnload.style.display = "none";
+                editable.style.display = "none";
+                eng.textContent = "";
+                countSoSyllable();
+            }
+            saved.splice(selected, 1);
+            refresh();
+        }
+    }
 
-          if (word_text.slice(word_text.length - 3) === "ded"  || word_text.slice(word_text.length - 3) === "ted") {
-              to_add++;
-          }
+    var all = document.getElementById("all");
+    var up = document.getElementById("up");
+    var down = document.getElementById("down");
+    var move = document.getElementById("edit");
+    move.addEventListener("click", sort);
+    function sort(event) {
+        var uppermost = move.getBoundingClientRect().top;
+        var lowermost = uppermost + move.clientHeight;
+        var mid = (uppermost + lowermost) / 2;
 
-          count = count + to_add;
+        if (up.style.display === "block" || (all.style.display === "block" && event.clientY < mid)) {
+            move_up();
+        } else {
+            move_down();
+        }
 
-          if (word_text.length === 0) {
-              count = 0;
-          }
-      }
+        refresh();
+        gabayga.children.item(selected).style.backgroundColor = "#4696dc";
+        var upper = gabayga.children.item(selected).offsetTop;
+        gabayga.scrollTop = upper;
+        display_editable();
+        eng.textContent = saved[selected];
+        countSoSyllable();
+    }
 
-      if (document.getElementById("eng").innerText.trim().length === 0) {
-          document.getElementById("eng").textContent = "";
-          count = 0;
-      }
+    function move_up() {
+        var x = saved[selected];
+        saved[selected] = saved[selected - 1];
+        saved[selected - 1] = x;
+        selected = selected - 1;
+    }
 
-      document.getElementById("syeng").textContent = `English Syllables: ${count}`;
-  }
+    function move_down() {
+        var x = saved[selected];
+        saved[selected] = saved[selected + 1];
+        saved[selected + 1] = x;
+        selected = selected + 1;
+    }
 
+    function save() {
+        var eng = document.getElementById("eng");
+        var gabayga = document.getElementById("gabayga");
+        var edit = document.getElementById("edit");
+
+        if (gabayga.style.display == "none") {
+            gabayga.style.display = "block";
+            dwnload.style.display = "block";
+        }
+
+        if (selected !== -1) {
+            saved[selected] = eng.textContent;
+        } else {
+            saved.push(eng.textContent)
+        }
+
+        selected = -1;
+        refresh();
+    }
+
+    function display_editable() {
+        editable.style.display = "block";
+        if (saved.length > 1) {
+            edit.style.display = "inline";
+            all.style.display = "none";
+            up.style.display = "none";
+            down.style.display = "none";
+
+            if (selected > 0 && selected < saved.length - 1) {
+                all.style.display = "block";
+            } else if (selected === saved.length - 1) {
+                up.style.display = "block";
+            } else {
+                down.style.display = "block";
+            }
+        } else { 
+            edit.style.display = "none";
+        }
+    }
+
+    function refresh() {
+        editable.style.display = "none";
+        eng.textContent = "";
+        gabayga.textContent = "";
+        saved.forEach((text, index) => {
+            var line = `${index + 1}: ${text}`;
+            if (index < saved.length - 1) {
+               line += "\r\n";
+            }
+            var ins = document.createElement("span");
+            ins.style.border = "none";
+            ins.style.margin = "0";
+            ins.textContent = line;
+            ins.width = "100";
+            ins.padding = "0";
+            ins.style.borderRadius = "9px";
+            ins.onclick = function() {
+                Array.prototype.forEach.call(gabayga.getElementsByTagName("*"), element => {
+                    element.style.backgroundColor = "";
+                });
+                if ((selected && selected !== index) || selected === -1 || (selected === 0 && index !== 0)) {
+                    selected = index;
+                    display_editable();
+                    this.style.backgroundColor = "#4696dc";
+                    this.style.width = "100%";
+                    eng.textContent = line.match(/(?<=\d+:\s+).*/gi)[0].trim();
+                    countSoSyllable();
+                } else if (selected === index) {
+                    selected = -1;
+                    editable.style.display = "none";
+                    eng.textContent = "";
+                    countSoSyllable();
+                }
+            }
+            gabayga.appendChild(ins);
+        });
+        countSoSyllable();
+    }
+
+    document.getElementById('eng').addEventListener('keydown', (evt) => {
+        if (evt.keyCode === 13) {
+            evt.preventDefault();
+        }
+    });
+
+    document.getElementById("eng").addEventListener("input", countSoSyllable);
+
+    const syllableRegex = /[^aeiou]*[aeiou]+(?:[^aeiou]*$|[^aeiou](?=[^aeiou]))?/gi
+
+  const pattern_one = [4, 3, 2, 3];
+  var possible_shared = [];
   function countSoSyllable(e) {
-      var text = document.getElementById("so").innerText;
+      var eng = document.getElementById("eng");
+      eng.classList.add("full");
+      var xaraf = document.getElementById("xaraf");
+      xaraf.style.display = "none";
+      document.getElementById("so").innerText = null;
+      var text = document.getElementById("eng").innerText;
+      var part_one = ""
+      var i = 0;
+      text.split(" ").every(word => {
+          var matched = word.match(/[aeiou]/gi);
+          if (matched) {
+            i += matched.length;
+          } else {
+              i += 1;
+          }
+
+          part_one += `${word} `;
+
+          if (i >= 12) {
+              return false;
+          }
+
+          return true;
+      });
+
+      var part_two = text.slice(part_one.length);
+
       var words = text.split(" ");
       var count = 0;
+      var long_vowels = 0;
       for (word in words) {
           var word_text = words[word];
           var to_add = so_count(word_text);
+          var long_add = long_count(word_text)
           count = count + to_add;
+          long_vowels = long_vowels + long_add;
 
           if (word_text.length === 0) {
               count = 0;
+              long_vowels = 0;
           }
       }
 
-      if (document.getElementById("so").innerText.trim().length === 0) {
-          document.getElementById("so").textContent = "";
+      var syllables = "";
+      if (document.getElementById("eng").innerText.trim().length === 0) {
+          xaraf.style.display = "none";
+          document.getElementById("eng").textContent = "";
           count = 0;
+          long_vowels = 0;
+
+
+          document.getElementById("alan").textContent = `Tirada Alanka: ${count}`;
+          document.getElementById("dheer").textContent = `Tirada Shaqaldheerka: ${long_vowels}`;
+          document.getElementById("iskudar").textContent = `Tirada La Isku Daray: ${count + long_vowels}`;
+
+          var so = document.getElementById("so");
+          so.textContent = "";
+          return;
+      } else {
+          var syllables = part_one.match(syllableRegex);
+          if (!syllables) {
+              syllables = text;
+          } else {
+              syllables = syllables.join(" ");
+          }
       }
 
-      document.getElementById("syso").textContent = `Somali Syllables: ${count}`;
+      var match = text.match(syllableRegex);
+      if (match) {
+          count = match.length;
+      } else {
+          count = 1;
+      }
+
+      document.getElementById("alan").textContent = `Tirada Alanka: ${count}`;
+      document.getElementById("dheer").textContent = `Tirada Shaqaldheerka: ${long_vowels}`;
+      document.getElementById("iskudar").textContent = `Tirada La Isku Daray: ${count + long_vowels}`;
+      <!--document.getElementById("so").textContent = syllables;-->
+
+      var separated = separate_syllables(syllables);
+      var both_green = true;
+      separated.forEach((syllable, i) => {
+        var colour = "green";
+        var el = "insert";
+        var vowels = syllable.match(/[aeiou]/gi);
+
+        if (!vowels || vowels.length != pattern_one[i]) {
+            colour = "red";
+            both_green = false;
+            el = "u";
+        }
+
+        var bold = document.createElement(el);
+        bold.style.color = colour;
+        bold.textContent = syllable + " | ";
+        document.getElementById("so").appendChild(bold);
+      });
+
+      if (part_two) {
+          var p = document.createElement("p");
+          document.getElementById("so").appendChild(p);
+          separate_part_two(part_two).forEach((column) => {
+              var el = "insert";
+
+              if (column.length === 1) {
+                  column[1] = "red";
+              }
+
+              if (column[1] === "red") {
+                  el = "u";
+                  both_green = false;
+              }
+
+              var insert = document.createElement(el);
+              insert.style.color = column[1];
+              insert.textContent = column[0].join(" ") + " | ";
+              document.getElementById("so").appendChild(insert);
+          });
+      }
+
+      if (count + long_vowels === 20) {
+          var start = /(?<=^|\s)([a-ce-jl-rt-z]|dh|kh|sh|[dks])/gi
+          var match_one = part_one.match(start);
+          var match_two = part_two.match(start);
+          var shared = match_one.filter(value => match_two.includes(value.toUpperCase()) || match_two.includes(value.toLowerCase()));
+
+          if (gabayga.style.display === "none") {
+              possible_shared = shared;
+          }
+
+          var xaraf_raac = shared.filter(value => possible_shared.includes(value.toUpperCase()) || possible_shared.includes(value.toLowerCase()))
+          if (shared.length === 0 || xaraf_raac.length === 0) {
+              xaraf.style.display = "block";
+          } else {
+              xaraf.style.display = "none";
+          }
+
+          if (both_green && xaraf.style.display === "none") {
+              eng.classList.remove("full");
+              eng.scrollTo(eng.scrollWidth, 0);
+          }
+      } else {
+          xaraf.style.display = "none";
+      }
   }
 
-  function new_count(word) {
+  function separate_syllables(syllables) {
+      syllables = syllables.split(" ").filter(elm => elm);
+
+      var syllabic_count = [];
+      syllables.forEach((syllable, index) => {
+        var vowels = syllable.match(/[aeiou]/gi);
+        if (vowels) {
+          syllabic_count[index] = syllable.match(/[aeiou]/gi).length;
+        } else {
+            syllabic_count[index] = 1;
+        }
+      });
+
+      var sep_pattern = [];
+      var position = 0;
+      pattern_one.forEach((pattern, i) => {
+          if (sep_pattern.length === i) {
+              sep_pattern[i] = [];
+          }
+
+          syllabic_count.slice(position).forEach((syllable, j) => {
+              if (sep_pattern[i].reduce((a, b) => (a + b), 0) < pattern) {
+                  sep_pattern[i].push(syllable);
+                  position += 1;
+              }
+          });
+      });
+
+      var slices = [];
+      sep_pattern.forEach((elem, i) => {
+          if (i === 0) {
+              slices[i] = [0, elem.length];
+          } else {
+              var prev = slices[i - 1][1];
+              slices[i] = [prev, prev + elem.length];
+          }
+      });
+      
+      var sliced = []
+      slices.forEach((slice, index) => {
+          sliced.push(syllables.slice(slice[0], slice[1]).join(" "));
+      });
+
+      var s_joined = syllables.join(" ");
+      var slice_joined = sliced.join(" ");
+      if (slice_joined.length < s_joined.length) {
+          sliced[sliced.length - 1] += s_joined.slice(slice_joined.length);
+      }
+
+      return sliced;
+  }
+
+  function separate_part_two(part_two) {
+    columns = [];
+    i = 0;
+    var c = part_two.match(syllableRegex);
+    if (!c) {
+        c = [part_two];
+    }
+
+    c.every((syllable, j) => {
+      if (!columns[i]) {
+        columns[i] = [[]];
+      }
+
+      var vowels = /[aeiou]/gi;
+      columns[i][0].push(syllable);
+      if (syllable.match(/[aeiou]{2}/gi)) {
+          if ([0, 1, 2].includes(i) && columns[i][0].length === 1 && !(i === 1 && c[j - 1].match(/[aeiou]{2}/gi))) {
+            columns[i][1] = "green";
+        } else {
+            columns[i][1] = "red";
+        }
+
+        i += 1;
+        return true;
+      }
+
+      var prev = columns.slice(0, i + 1).map((x, i) => x[0].length === 3 ? i : null).filter(x => x !== null);
+      if (prev === []) {
+          prev = [i];
+      }
+
+      if (columns[i][0].length === 3) {
+        if ([0, 1, 3].includes(i) && columns[i][0].join("").match(vowels).length === 3 && prev[0] === i) {
+            columns[i][1] = "green";
+        } else {
+            columns[i][1] = "red";
+        }
+
+        i += 1;
+        return true;
+      }
+      if (i + 1 < c.length && c[i + 1].match(/[aeiou]{2}/gi)) {
+        if ([1, 3].includes(i) && columns[i][0].length === 1 && syllable.match(vowels).length === 1) {
+            columns[i][1] = "green";
+        }
+
+        if (![1, 3].includes(columns[i][0].join("").match(vowels).length)) {
+            columns[i][1] = "red";
+        }
+
+        i += 1;
+        return true;
+      }
+
+      if (![0, 1, 2, 3].includes(i)) {
+        columns[i][1] = "red";
+      }
+
+      if (columns[i].length === 1) {
+          columns[i][1] = "red";
+      }
+
+      return true;
+    });
+
+    return columns;
+
+  }
+
+  function long_count(word) {
       word = word.toLowerCase();
-      if(word.length <= 3) { return 1; }
-      word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
-      word = word.replace(/^y/, '');
-      return word.match(/[aeiouy]{1,2}/g).length;
+      var matches = word.match(/[aeiou]{2}/g);
+      if (matches) {
+          return matches.length;
+      } else {
+          return 0;
+      }
   }
 
   function so_count(word) {
       word = word.toLowerCase();
       if(word.length <= 3) { return 1; }
-      return word.match(/[aeiouy]{1,2}/g).length;
+      var match = word.match(/[aeiou]+/g);
+      if (match) {
+          return match.length;
+      } else {
+          return 1;
+      }
   }
 
   function setDark() {
@@ -105,6 +646,13 @@
 
       if (currentTheme === 'dark' || prefersDarkScheme.matches) {
           document.body.classList.add('dark');
+          var check = document.getElementById("darkmode");
+          check.checked = true;
+      }
+
+      const done = localStorage.getItem("done");
+      if (done !== "1") {
+        document.getElementById("modal").style.display = "block";
       }
   }
 
@@ -113,6 +661,28 @@
           setDark()
       )
   })();
+
+  document.getElementById("eng").addEventListener("paste", function(e) {
+  e.preventDefault();
+  if (e.clipboardData && e.clipboardData.getData) {
+    var text = e.clipboardData.getData("text/plain");
+    document.execCommand("insertHTML", false, text);
+  } else if (window.clipboardData && window.clipboardData.getData) {
+    var text = window.clipboardData.getData("Text");
+    insertTextAtCursor(text);
+  }
+});
+
+  document.getElementById("so").addEventListener("paste", function(e) {
+  e.preventDefault();
+  if (e.clipboardData && e.clipboardData.getData) {
+    var text = e.clipboardData.getData("text/plain");
+    document.execCommand("insertHTML", false, text);
+  } else if (window.clipboardData && window.clipboardData.getData) {
+    var text = window.clipboardData.getData("Text");
+    insertTextAtCursor(text);
+  }
+});
 </script>
 </body>
 </html>

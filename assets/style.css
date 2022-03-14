@@ -1,59 +1,269 @@
-[contenteditable]:empty::before {
-  color: gray;
+[role=textbox]:empty::before {
+    color: gray;
 }
 
-.eng[contenteditable]:empty::before {
-  content: "Original Text..."
+a:link, a:visited {
+    color: rgb(36, 127, 204);
+    text-decoration-line: none;
 }
 
-.so[contenteditable]:empty::before {
-  content: "Translated Text...";
+a:focus, a:hover {
+    color: rgb(25, 87, 139);
+    /*text-direction-line: underline;*/
 }
+
+.eng[role=textbox]:empty::before {
+    content: "Baytka xaggaan ku qor..."
+}
+
+.so[role=textbox]:empty::before {
+    content: "Baytkii oo la miisaami doono...";
+}
+
 input[type=text], select, .input, span {
-  width: 100%;
-  background-color: white;
-  padding: 12px 20px;
-  margin: 8px 0;
-  display: inline-block;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  outline: none;
-  box-sizing: border-box;
+    position: relative;
+    width: 100%;
+    background-color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    box-sizing: border-box;
 }
 
 input[type=submit] {
-  width: 100%;
-  background-color: #4CAF50;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 input[type=submit]:hover {
-  background-color: #45a049;
+    background-color: #45a049;
 }
 
 div {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
+    border-radius: 5px;
+    background-color: #f2f2f2;
+    padding: 20px;
 }
 
 .dark, .dark span {
-  background-color: black;
+    background-color: black;
 }
 
 .dark div {
-  background-color: #121212;
+    background-color: #121212;
 }
 
 .dark h3, .dark p, .dark label, .dark span {
-  color: white;
+    color: white;
 }
 
 h3, #toggle {
-  text-align: center;
+    text-align: center;
+}
+
+span.parent {
+    position: relative;
+    padding: 0;
+}
+
+span.text {
+    width: 75%;
+    float: left;
+    margin: 0;
+    border: 0;
+    white-space: nowrap;
+    overflow-x: scroll;
+}
+
+.dark span.arrow {
+    background-color: white;
+}
+
+span.arrow {
+    width: 25%;
+    float: right;
+    margin: 0;
+    border-top: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 1px;
+    border-radius: 9px;
+    background-color: black;
+    position: absolute; top: 0;
+    bottom: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    color: black;
+}
+
+svg.arrow {
+    display: block;
+    margin: 0 auto;
+    height: 100%;
+    color: white;
+}
+
+.dark svg.arrow {
+    color: black;
+}
+
+span.parent:has(span.full) span.arrow {
+    display: none !important;
+}
+
+span.parent span.eng.full {
+    width: 100%;
+}
+
+.dark .ripple {
+  background-position: center;
+  transition: background 0.5s;
+}
+
+.dark .ripple:hover {
+  background: white radial-gradient(circle, transparent 1%, #dddddd 1%) center/15000%;
+}
+
+.dark .ripple:active {
+  background-size: 100%;
+  transition: background 0s;
+}
+
+.ripple {
+  background-position: center;
+  transition: background 0.5s;
+}
+
+.ripple:hover {
+  background: black radial-gradient(circle, transparent 1%, #333333 1%) center/15000%;
+}
+
+.ripple:active {
+  background-size: 100%;
+  transition: background 0s;
+}
+
+.dark svg.edit {
+    color: white;
+}
+
+svg.edit {
+    color: black;
+}
+
+.modal {
+    position: fixed;
+    z-index: 2;
+    left: 10%;
+    top: 5%;
+    border: 1px solid white;
+    width: 70%;
+    height: 70%;
+    border-radius: 10px;
+    padding-top: 0%;
+    overflow: auto;
+}
+
+span.close {
+    border: none;
+    background-color: rgba(0,0,0,0);
+    font-size: 28px;
+    font-weight: bold;
+    text-align: end;
+    padding: 0;
+}
+
+span.tuttext {
+    border: none;
+    background-color: rgba(0,0,0,0);
+    box-sizing: content-box;
+    padding: 0;
+}
+
+div.content {
+    width: 100%;
+    height: 90%;
+    margin: 0;
+    position: relative;
+    padding: 0;
+}
+
+label.themelabel {
+    width: 3em;
+    height: 1em;
+    position: relative;
+    display: inline-block;
+    background: #ebebeb;
+    border-radius: 200px;
+    box-shadow: inset 0px 5px 15px rgba(0,0,0,.4), inset 0px -5px 15px rgba(255,255,255,0.4);
+    cursor: pointer;
+}
+
+label.themelabel:after {
+    content: "";
+    width: 0.8em;
+    height: 0.8em;
+    position: absolute;
+    top: 0.1em;
+    left: 0.1em;
+    background: linear-gradient(180deg, #ffcc89, #d9860b);
+    border-radius: 180px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+input.darkmode {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+}
+
+input.darkmode:checked + label.themelabel {
+    background: #242424;
+}
+
+input.darkmode:checked + label.themelabel:after {
+    left: 2.9em;
+    transform: translateX(-100%);
+    background: linear-gradient(180deg, #777, #3a3a3a);
+}
+
+label.themelabel, label.themelabel:after {
+    transition: 0.3s;
+}
+
+label.themelabel svg {
+    position: absolute;
+    width: 0.5em;
+    top: 0.25em;
+    z-index: 1;
+}
+
+label.themelabel svg.sun {
+    left: 0.25em;
+    fill: #fff;
+    transition: 0.3s;
+}
+
+label.themelabel svg.moon {
+    left: 2.25em;
+    top: 0.15em;
+    fill: #7e7e7e;
+    transition: 0.3s;
+}
+
+input.darkmode:checked + label.themelabel svg.sun {
+    fill: #7e7e7e;
+}
+
+input.darkmode:checked + label.themelabel svg.moon {
+    fill: #fff;
 }
