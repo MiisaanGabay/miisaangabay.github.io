@@ -267,3 +267,12 @@ input.darkmode:checked + label.themelabel svg.sun {
 input.darkmode:checked + label.themelabel svg.moon {
     fill: #fff;
 }
+
+h1 { 
+    text-align: center;
+    color: black;
+}
+
+.dark h1 {
+    color: white;
+}
