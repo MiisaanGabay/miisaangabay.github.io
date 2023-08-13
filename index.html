@@ -32,6 +32,13 @@
   </div>
   <span style="height: 114px; overflow-y: scroll !important; white-space: pre-wrap; display: none; padding: 0;" id="gabayga">
   </span>
+  <div id="add" style="text-align: center; padding-bottom: 0;">
+      <input type="file" id="file" style="display: none;" accept=".txt">
+      <svg onClick="add_gabay()" height="1.5em" class="edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+          <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+          <path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+      </svg>
+  </div>
   <div style="padding: 0; text-align: center; display: none;" id="edit-row">
       <br>
       <svg onclick="del()" id="delete" height="1.5em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -52,7 +59,6 @@
   <p id="dheer">Tirada Shaqaldheerka: 0</p>
   <p id="iskudar">Tirada La Isku Daray: 0</p>
 </div>
-<!--<p id="toggle">Midabka: <a href="#" onClick="toggleTheme()">Badal</a></p>-->
 <p id="toggle">
     <input type="checkbox" class="darkmode" id="darkmode" />
     <label for="darkmode" class="themelabel" onClick="toggleTheme()">
@@ -173,6 +179,13 @@
                 </svg>
             </label>
         </div>
+        <span class="tuttext">9: Gabay aad awal qortay waa soo gelin kartaa, hadaad calaamaddaan hoose taabatid:</span>
+        <div style="text-align: center;">
+            <svg height="1.5em" class="edit" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                <!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2023 Fonticons, Inc. -->
+                <path fill="currentColor" d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+            </svg>
+        </div>
         <span class="tuttext">Website-kaan wuxuu ku miisaamaa qawaacidda ku sharaxan <a href="http://www.aamaguul.com/gebi/suugaan/miisaanka/Gabayga.html">xaggaan</a>.</span>
         <span class="tuttext">Code-ka waxaa ka heli kartaa <a href="https://github.com/MiisaanGabay/miisaangabay.github.io">halkaan</a>.</span>
     </div>
@@ -195,8 +208,26 @@
       document.getElementById("modal").style.display = "none";
       localStorage.setItem("done", 1);
   }
+
+  function add_gabay() {
+      var file = document.getElementById("file");
+      file.click();
+  }
 </script>
 <script>
+    document.getElementById("file").addEventListener("change", event => {
+        const reader = new FileReader();
+        reader.addEventListener("load", e => {
+            saved = e.target.result.split(/\r?\n/);
+            refresh();
+            gabayga.style.display = "block";
+            add.style.display = "none";
+            document.getElementById("download").style.display = "block";
+        });
+        reader.readAsText(event.target.files[0]);
+    });
+
+    var add = document.getElementById("add");
     var saved = [];
     var selected = -1;
     var editable = document.getElementById("edit-row");
@@ -217,6 +248,7 @@
                 selected = -1;
                 gabayga.textContent = "";
                 gabayga.style.display = "none";
+                add.style.display = "block";
                 dwnload.style.display = "none";
                 editable.style.display = "none";
                 eng.textContent = "";
@@ -273,6 +305,7 @@
 
         if (gabayga.style.display == "none") {
             gabayga.style.display = "block";
+            add.style.display = "none";
             dwnload.style.display = "block";
         }
 
