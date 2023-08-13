@@ -216,6 +216,12 @@
 </script>
 <script>
     document.getElementById("file").addEventListener("change", event => {
+        var file = event.target.files[0];
+        if (file.name.match(/\.txt/) === null) {
+            alert("Wuxuu wax qoranba ma aha!");
+            return;
+        }
+
         const reader = new FileReader();
         reader.addEventListener("load", e => {
             saved = e.target.result.split(/\r?\n/);
