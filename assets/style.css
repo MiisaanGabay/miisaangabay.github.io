@@ -197,7 +197,7 @@ div.content {
     padding: 0;
 }
 
-label.themelabel {
+label.themelabel, label.themelabeltut {
     width: 3em;
     height: 1em;
     position: relative;
@@ -208,7 +208,7 @@ label.themelabel {
     cursor: pointer;
 }
 
-label.themelabel:after {
+label.themelabel:after, label.themelabeltut:after {
     content: "";
     width: 0.8em;
     height: 0.8em;
@@ -226,45 +226,45 @@ input.darkmode {
     visibility: hidden;
 }
 
-input.darkmode:checked + label.themelabel {
+input.darkmode:checked + label.themelabel, .dark label.themelabeltut {
     background: #242424;
 }
 
-input.darkmode:checked + label.themelabel:after {
+input.darkmode:checked + label.themelabel:after, .dark label.themelabeltut:after {
     left: 2.9em;
     transform: translateX(-100%);
     background: linear-gradient(180deg, #777, #3a3a3a);
 }
 
-label.themelabel, label.themelabel:after {
+label.themelabel, label.themelabel:after, label.themelabeltut, label.themelabeltut:after {
     transition: 0.3s;
 }
 
-label.themelabel svg {
+label.themelabel svg, label.themelabeltut svg {
     position: absolute;
     width: 0.5em;
     top: 0.25em;
     z-index: 1;
 }
 
-label.themelabel svg.sun {
+label.themelabel svg.sun, label.themelabeltut svg.sun {
     left: 0.25em;
     fill: #fff;
     transition: 0.3s;
 }
 
-label.themelabel svg.moon {
+label.themelabel svg.moon, label.themelabeltut svg.moon {
     left: 2.25em;
     top: 0.15em;
     fill: #7e7e7e;
     transition: 0.3s;
 }
 
-input.darkmode:checked + label.themelabel svg.sun {
+input.darkmode:checked + label.themelabel svg.sun, .dark label.themelabeltut {
     fill: #7e7e7e;
 }
 
-input.darkmode:checked + label.themelabel svg.moon {
+input.darkmode:checked + label.themelabel svg.moon, .dark label.themelabeltut svg.moon {
     fill: #fff;
 }
 
